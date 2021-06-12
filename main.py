@@ -3,7 +3,7 @@ import copy
 import math
 import time
 import random
-
+import matplotlib.pyplot as plt
 
 def getInitialBoard():
     board = np.zeros(shape=(8,8))
@@ -38,8 +38,48 @@ def getInitialBoard():
     board[7][2] = 1
     board[7][4] = 1
     board[7][6] = 1
-
+    
     return board
+
+def evaluationFun(board,player):
+    val,play=gameIsSolved(board)
+    lengthTwo = np.count_nonzero(board == 2)
+    lengthOne = np.count_nonzero(board == 1)
+    if player==1:
+        if val and play==2:
+            return -100 
+        elif val and play==1:
+            return +100
+        else:
+            return lengthOne-lengthTwo
+    if player==2:
+        if val and play==2:
+            return +100
+        elif val and play==1:
+            return -100
+        else:
+            return lengthTwo-lengthOne
+
+
+    
+
+def isAttackValid(i,j,board,player,dir):
+    if player==1:
+        if dir=="LEFT":
+            if isItInBounds(i-2,j-2) and board[i-2][j-2]==0:
+                return True
+        if dir=="RIGHT":
+            if isItInBounds(i-2,j+2) and board[i-2][j+2]==0:
+                return True
+        pass
+    elif player==2:
+        if dir=="LEFT":
+            if isItInBounds(i+2,j-2) and board[i+2][j-2]==0:
+                return True
+        if dir=="RIGHT":
+            if isItInBounds(i+2,j+2) and board[i+2][j+2]==0:
+                return True
+
 
 '''
 kings are presented as 4 for 2
@@ -93,7 +133,6 @@ def getPossibleMoves(player,board):
                                     newBoard[x+1][y-1]=0
                                     newBoard[x+2][y-2]=2
                                     newX,newY = x+2,y-2
-                                    #print(newBoard)
                                     if isAttackAvailable(x+2,y-2,newBoard,2) != []:
                                         newListOfDirection = whereIsTheAttack(x+2,y-2,newBoard,2)
                                         if newListOfDirection!=[]:
@@ -166,18 +205,20 @@ def getPossibleMoves(player,board):
                                     newBoard[x-1][y-1]=0
                                     newBoard[x-2][y-2]=1
                                     newX, newY= x-2, y-2
-                                    if isAttackAvailable(x-2,y-2,newBoard,1) != []:
-                                        newListOfDirection = whereIsTheAttack(x-2,y-2,newBoard,1)
+                                    if isAttackAvailable(newX,newY,newBoard,1) != []:
+                                        newListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
                                         if newListOfDirection!=[]:
                                             for direction in newListOfDirection:
                                                 if direction=="LEFT":
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX-1][newY-1]=0
                                                     newBoard[newX-2][newY-2]=1
+                                                    moves.append(copy.deepcopy(newBoard))
                                                 else:
                                                     newBoard[newX][newY]=0
-                                                    newBoard[newX-1][newY-1]=0
-                                                    newBoard[newX-2][newY-2]=1
+                                                    newBoard[newX-1][newY+1]=0
+                                                    newBoard[newX-2][newY+2]=1
+                                                    moves.append(copy.deepcopy(newBoard))
                                     else:
                                         moves.append(newBoard)
                                 else:
@@ -192,12 +233,14 @@ def getPossibleMoves(player,board):
                                             for direction in newListOfDirection:
                                                 if direction=="LEFT":
                                                     newBoard[newX][newY]=0
-                                                    newBoard[newX-1][newY+1]=0
-                                                    newBoard[newX-2][newY+2]=1
+                                                    newBoard[newX-1][newY-1]=0
+                                                    newBoard[newX-2][newY-2]=1
+                                                    moves.append(copy.deepcopy(newBoard))
                                                 else:
                                                     newBoard[newY][newY]=0
                                                     newBoard[newX-1][newY+1]=0
                                                     newBoard[newX-2][newY+2]=1
+                                                    moves.append(copy.deepcopy(newBoard))
                                     else:
                                         moves.append(newBoard)
                     # no attack simple move
@@ -318,109 +361,61 @@ def whereIsTheAttack(i,j,board, player):
 
 
 def move(player,board):
-    # copiedBoard = copy.deepcopy(board)
-
     bestScore = -math.inf
     moves = getPossibleMoves(player, board)
     moveloc = moves[0]
     for move in moves:
-        score = alphabeta(move, 5, -math.inf, math.inf, False)
+        if player==1:
+            score = alphabeta(move, 1, -math.inf, math.inf, True, 1)
+        elif player==2:
+            score = alphabeta(move, 1, -math.inf, math.inf, True, 2)
         if score > bestScore:
             bestScore = score
             moveLoc = move
     return moveLoc
 
-
 def startGame():
 
     board = getInitialBoard()
-
     # create player objects
     player = 1
-
     while(True):
-        print("player:",player)
+        
+        '''plt.imshow(board)
+        plt.title("player=%i" %player)
+        plt.show()'''
         print(board)
         properMove = move(player,board)
         board = properMove
-        
         boolis, playerWon = gameIsSolved(board)
-        if boolis :
+        if boolis:
             print(playerWon, "Won!")
             break
-        
         if player==1:
             player=2
         else:
             player=1
-        
 
-
-
-
-def evaluationFun(board,player):
-    val,play=gameIsSolved(board)
-    lengthTwo = np.count_nonzero(board == 2)
-    lengthOne = np.count_nonzero(board == 1)
-    if player==1:
-        if val and play==2:
-            return -100 
-        elif val and play==1:
-            return +100 
-        else:
-            return lengthOne-lengthTwo
-    if player==2:
-        
-        if val and play==2:
-            return +100
-        elif val and play==1:
-            return -100
-        else:
-            return lengthTwo-lengthOne
-
-
-    
-
-def isAttackValid(i,j,board,player,dir):
-    if player==1:
-        if dir=="LEFT":
-            if isItInBounds(i-2,j-2) and board[i-2][j-2]==0:
-                return True
-        if dir=="RIGHT":
-            if isItInBounds(i-2,j+2) and board[i-2][j+2]==0:
-                return True
-        pass
-    elif player==2:
-        if dir=="LEFT":
-            if isItInBounds(i+2,j-2) and board[i+2][j-2]==0:
-                return True
-        if dir=="RIGHT":
-            if isItInBounds(i+2,j+2) and board[i+2][j+2]==0:
-                return True
 
 
 '''
 initial call:
 minimax(currentPosition, 3, -∞, +∞, true)
 '''
-def alphabeta(board,depth,alpha,beta,max):
-    player=0
-    if max:
-        player=1
-    else:
-        player=2
-    
-    if gameIsSolved(board) or depth==0:
+def alphabeta(board,depth,alpha,beta,max, player):
+    smallBool,_ = gameIsSolved(board)
+    if smallBool or depth==0:
         return evaluationFun(board,player)
-    
-    
     
     if max:
         bestValue = -math.inf
-        
-        for move in getPossibleMoves(player,board=board):
-            value = alphabeta(move,depth-1,alpha,beta, False)
-            bestValue = max(bestValue, value)
+        for move in getPossibleMoves(player,board):
+            if player==1:
+                player=2
+            else:
+                player==1
+            value = alphabeta(move,depth-1,alpha,beta, False, player)
+            bestValue = max(bestValue,value)
             alpha = max(alpha, value)
             if beta <= alpha:
                 break
@@ -429,47 +424,18 @@ def alphabeta(board,depth,alpha,beta,max):
     else:
         smallValue = math.inf
         for move in getPossibleMoves(player,board):
-            value = alphabeta(move,depth-1,alpha,beta, True)
-            smallValue = min(smallValue, value)
+            if player==1:
+                player=2
+            else:
+                player==1
+            value = alphabeta(move,depth-1,alpha,beta, True, player)
+            smallValue = min(smallValue,value)
             beta = min(beta, value)
             if beta <= alpha:
                 break
         return smallValue
 
+
+
 if __name__ == "__main__":
-    #startGame()
-    board = getInitialBoard()
-    board = np.zeros((8,8))
-    board[0,1]=1
-
-    board[1,2]=2
-    board[1,4]=2
-    board[1,6]=2
-
-    board[2,1]=2
-    board[2,3]=2
-    board[2,5]=2
-    board[2,7]=1
-
-    board[3,0]=2
-    board[3,2]=2
-    board[3,4]=1
-    
-    board[4,1]=1
-
-    board[6,1]=1
-    board[6,3]=1
-    board[6,5]=1
-    board[6,7]=1
-
-    board[7,0]=1
-    board[7,2]=1
-    board[7,4]=1
-    board[7,6]=1
-
-    for x in getPossibleMoves(1,board=board):
-        print(x)
-        print()
-        print(board)
-        print()
-
+    startGame()

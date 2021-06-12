@@ -144,3 +144,12 @@ class Player:
 
 * optimization 
     * this will be added when I have a better evaluation function and understand the game better and redo possible moves fun
+
+## Changes 1.1.1
+
+* Minimax
+    * alphabeta prunning algorithm had some bugs didnt go to depth
+
+* General
+    * Player 1 doesnt play optimal for some reason don't know why. It could be because i switch the players and some bugs happen. Don't know where in code tho
+
