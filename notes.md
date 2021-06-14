@@ -19,69 +19,27 @@
  [1. 0. 1. 0. 1. 0. 1. 0.]  ]
 
 
- ## useless shit
+ ## Code that might be needed for more debugging
+    
+    board = np.zeros((8,8))
+    board[5][3]=1
+    board[3][3]=1
+    board[1][3]=1
+    board[0][4]=2
+    printBoard(board)
+    for move in getPossibleMoves(2,board):
+        printBoard(move)
 
-class Player:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    id=0
-
-    def __init__(self,id):
-        self.id=id
-
-    def printNum(self):
-        print(self.id)
-
-    '''
-    initial call:
-    minimax(currentPosition, 3, -∞, +∞, true)
-    '''
-    def alphabeta(self,board,depth,alpha,beta,max):
-        if gameIsSolved(board) or depth==0:
-            return evaluationFun(board)
-        
-        player=0
-        if max:
-            player=1
-        else:
-            player=2
-        
-        if max:
-            bestValue = -math.inf
-            
-            for move in getPossibleMoves(player,board=board):
-                value = alphabeta(move,depth-1,alpha,beta, False)
-                bestValue = max(bestValue, value)
-                alpha = max(alpha, value)
-                if beta <= alpha:
-                    break
-            return bestValue
-            
-        else:
-            smallValue = math.inf
-            for move in getPossibleMoves(player,board):
-                value = alphabeta(move,depth-1,alpha,beta, True)
-                smallValue = min(smallValue, value)
-                beta = min(beta, value)
-                if beta <= alpha:
-                    break
-            return smallValue
-
-
-
-    def move(self,board):
-        pass
-
-
-
-
-[[0. 1. 0. 0. 0. 2. 0. 2.]
- [0. 0. 2. 0. 2. 0. 2. 0.]
- [0. 2. 0. 2. 0. 2. 0. 1.]
- [2. 0. 2. 0. 1. 0. 0. 0.]
- [0. 1. 0. 0. 0. 0. 0. 0.]
- [0. 0. 0. 0. 0. 0. 0. 0.]
- [0. 1. 0. 1. 0. 1. 0. 1.]
- [1. 0. 1. 0. 1. 0. 1. 0.]]
+    [[0. 1. 0. 0. 0. 2. 0. 2.]
+    [0. 0. 2. 0. 2. 0. 2. 0.]
+    [0. 2. 0. 2. 0. 2. 0. 1.]
+    [2. 0. 2. 0. 1. 0. 0. 0.]
+    [0. 1. 0. 0. 0. 0. 0. 0.]
+    [0. 0. 0. 0. 0. 0. 0. 0.]
+    [0. 1. 0. 1. 0. 1. 0. 1.]
+    [1. 0. 1. 0. 1. 0. 1. 0.]]
 
 
     board = getInitialBoard()
@@ -153,3 +111,10 @@ class Player:
 * General
     * Player 1 doesnt play optimal for some reason don't know why. It could be because i switch the players and some bugs happen. Don't know where in code tho
 
+## Changes 1.1.2
+
+* possible moves
+    * it allows 3 jumps which is the maximum you can jump
+
+* bugs
+    * goes out of bounds. Need to check my helper functions or maybe remake them cause some are not efficient -> this is gonna be done later who am I kidding 😅

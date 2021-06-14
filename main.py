@@ -126,51 +126,127 @@ def getPossibleMoves(player,board):
                         if listOfDirection!=[]:
                             for direction in listOfDirection:
                                 if direction=="LEFT":
-                                    # we know that we can jump there so we check if there is another attack there
-                                    # manipulate the board
+                                    # FIRST JUMP LEFT
                                     newBoard = copy.deepcopy(copyBoard)
                                     newBoard[x][y]=0
                                     newBoard[x+1][y-1]=0
                                     newBoard[x+2][y-2]=2
                                     newX,newY = x+2,y-2
-                                    if isAttackAvailable(x+2,y-2,newBoard,2) != []:
-                                        newListOfDirection = whereIsTheAttack(x+2,y-2,newBoard,2)
+                                    if isAttackAvailable(newX,newY,newBoard,2) != []:
+                                        newListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
                                         if newListOfDirection!=[]:
-                                            for direction in newListOfDirection:
-                                                if direction=="LEFT":
+                                            for directionTwo in newListOfDirection:
+                                                if directionTwo=="LEFT":
+                                                    # SECOND JUMP LEFT
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX+1][newY-1]=0
                                                     newBoard[newX+2][newY-2]=2
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX,newY = newX+2,newY-2
+                                                    if isAttackAvailable(newX,newY,newBoard,2) != []:
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
+                                                        if newNewListOfDirection!=[]:
+                                                            for directionThird in newNewListOfDirection:
+                                                                if directionThird=="LEFT":
+                                                                    # THIRD JUMP LEFT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY-1]=0
+                                                                    newBoard[newX+2][newY-2]=2
+                                                                    #newX,newY = newX+2,newY-2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                else:
+                                                                    # THIRD JUMP RIGHT
+                                                                    #right
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY+1]=0
+                                                                    newBoard[newX+2][newY+2]=2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                    else:
+                                                        moves.append(copy.deepcopy(newBoard))
                                                 else:
+                                                    # SECOND JUMP RIGHT
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX+1][newY+1]=0
                                                     newBoard[newX+2][newY+2]=2
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX, newY = newX+2, newY+2
+                                                    if isAttackAvailable(newX,newY,newBoard,2) != []:
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
+                                                        if newNewListOfDirection!=[]:
+                                                            for directionThird in newListOfDirection:
+                                                                if directionThird=="LEFT":
+                                                                    # THIRD JUMP RIGHT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY-1]=0
+                                                                    newBoard[newX+2][newY-2]=2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                else:
+                                                                    # THIRD JUMP RIGHT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY+1]=0
+                                                                    newBoard[newX+2][newY+2]=2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                    else:
+                                                        moves.append(copy.deepcopy(newBoard))
                                     else:
                                         moves.append(copy.deepcopy(newBoard))
                                 else:
-                                    # right
-                                    
+                                    # FIRST JUMP RIGHT
                                     newBoard = copy.deepcopy(copyBoard)
                                     newBoard[x][y]=0
                                     newBoard[x+1][y+1]=0
                                     newBoard[x+2][y+2]=2
                                     newX,newY = x+2,y+2
-                                    if isAttackAvailable(x+2,y+2,newBoard,2) != []:
+                                    if isAttackAvailable(newX,newY,newBoard,2) != []:
                                         newListOfDirection = whereIsTheAttack(x+2,y+2,newBoard,2)
                                         if newListOfDirection!=[]:
-                                            for direction in newListOfDirection:
-                                                if direction=="LEFT":
+                                            for directionTwo in newListOfDirection:
+                                                if directionTwo=="LEFT":
+                                                    # SECOND JUMP LEFT
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX+1][newY-1]=0
                                                     newBoard[newX+2][newY-2]=2
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX, newY = newX+2,newY-2
+                                                    if isAttackAvailable(newX,newY,newBoard,2):
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
+                                                        if newNewListOfDirection !=[]:
+                                                            for directionThree in newNewListOfDirection:
+                                                                if directionThree == "LEFT":
+                                                                    # THIRD JUMP LEFT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY-1]=0
+                                                                    newBoard[newX+2][newY-2]=2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                else:
+                                                                    # THIRD JUMP RIGHT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY+1]=0
+                                                                    newBoard[newX+2][newY+2]=2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                    else:
+                                                        moves.append(copy.deepcopy(newBoard))
                                                 else:
+                                                    # SECOND JUMP RIGHT
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX+1][newY+1]=0
                                                     newBoard[newX+2][newY+2]=2
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX, newY = newX+2,newY-2
+                                                    if isAttackAvailable(newX,newY,newBoard,2):
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
+                                                        if newNewListOfDirection!=[]:
+                                                            for directionThree in newNewListOfDirection:
+                                                                if directionThree == "LEFT":
+                                                                    # THIRD JUMP LEFT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY-1]=0
+                                                                    newBoard[newX+2][newY-2]=2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                else:
+                                                                    # THIRD JUMP RIGHT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX+1][newY+1]=0
+                                                                    newBoard[newX+2][newY+2]=2
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                    else:
+                                                        moves.append(copy.deepcopy(newBoard))
                                     else:
                                         moves.append(copy.deepcopy(newBoard))
                     # no attack simple move
@@ -198,8 +274,7 @@ def getPossibleMoves(player,board):
                         if listOfDirection!=[]:
                             for direction in listOfDirection:
                                 if direction=="LEFT":
-                                    # we know that we can jump there so we check if there is another attack there
-                                    # manipulate the board
+                                    # this is the first jump LEFT
                                     newBoard = copy.deepcopy(copyBoard)
                                     newBoard[x][y]=0
                                     newBoard[x-1][y-1]=0
@@ -208,39 +283,128 @@ def getPossibleMoves(player,board):
                                     if isAttackAvailable(newX,newY,newBoard,1) != []:
                                         newListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
                                         if newListOfDirection!=[]:
-                                            for direction in newListOfDirection:
-                                                if direction=="LEFT":
+                                            for directionTwo in newListOfDirection:
+                                                if directionTwo=="LEFT":
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX-1][newY-1]=0
                                                     newBoard[newX-2][newY-2]=1
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX, newY = newX-2, newY-2
+                                                    if isAttackAvailable(newX,newY,newBoard,1) != []:
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
+                                                        if newNewListOfDirection!=[]:
+                                                            for directionThird in newNewListOfDirection:
+                                                                if directionThird=="LEFT":
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX-1][newY-1]=0
+                                                                    newBoard[newX-2][newY-2]=1
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                else:
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX-1][newY+1]=0
+                                                                    newBoard[newX-2][newY+2]=1
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                    #right
+                                                    else:
+                                                        moves.append(copy.deepcopy(newBoard))
                                                 else:
+                                                    # second JUMP right
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX-1][newY+1]=0
                                                     newBoard[newX-2][newY+2]=1
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX,newY=newX-2,newY+2
+                                                    if isAttackAvailable(newX,newY,newBoard,1):
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
+                                                        if newNewListOfDirection !=[]:
+                                                            for directionThree in newNewListOfDirection:
+                                                                if directionThree=="LEFT":
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX-1][newY-1]=0
+                                                                    newBoard[newX-2][newY-2]=1
+                                                                    newX, newY = newX-2, newY-2
+                                                                    if isAttackAvailable(newX,newY,newBoard,1) != []:
+                                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
+                                                                        if newNewListOfDirection!=[]:
+                                                                            for directionThird in newNewListOfDirection:
+                                                                                if directionThird=="LEFT":
+                                                                                    newBoard[newX][newY]=0
+                                                                                    newBoard[newX-1][newY-1]=0
+                                                                                    newBoard[newX-2][newY-2]=1
+                                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                                else:
+                                                                                    newBoard[newX][newY]=0
+                                                                                    newBoard[newX-1][newY+1]=0
+                                                                                    newBoard[newX-2][newY+2]=1
+                                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                                    #right
+                                                                    else:
+                                                                        moves.append(copy.deepcopy(newBoard))
+                                                    else:
+                                                        newBoard[newX][newY]=0
+                                                        newBoard[newX-1][newY+1]=0
+                                                        newBoard[newX-2][newY+2]=1
+                                                        newX,newY=newX-1,newY+2
+                                                        moves.append(copy.deepcopy(newBoard))
                                     else:
                                         moves.append(newBoard)
                                 else:
+                                    # first jump RIGHT
                                     newBoard = copy.deepcopy(copyBoard)
                                     newBoard[x][y]=0
                                     newBoard[x-1][y+1]=0
                                     newBoard[x-2][y+2]=1
                                     newX,newY= x-2,y+2
-                                    if isAttackAvailable(x-2,y+2,newBoard,1) != []:
-                                        newListOfDirection = whereIsTheAttack(x-2,y-2,newBoard,1)
+                                    if isAttackAvailable(newX,newY,newBoard,1) != []:
+                                        newListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
                                         if newListOfDirection!=[]:
                                             for direction in newListOfDirection:
                                                 if direction=="LEFT":
+                                                    # second jump LEFT
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX-1][newY-1]=0
                                                     newBoard[newX-2][newY-2]=1
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX, newY = newX-2, newY-2
+                                                    if isAttackAvailable(newX,newY,newBoard,1) != []:
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
+                                                        if newNewListOfDirection!=[]:
+                                                            for directionThird in newNewListOfDirection:
+                                                                if directionThird=="LEFT":
+                                                                    # third JUMP left
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX-1][newY-1]=0
+                                                                    newBoard[newX-2][newY-2]=1
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                else:
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX-1][newY+1]=0
+                                                                    newBoard[newX-2][newY+2]=1
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                    #right
+                                                    else:
+                                                        moves.append(copy.deepcopy(newBoard))
                                                 else:
+                                                    # second JUMP RIGHT
                                                     newBoard[newY][newY]=0
                                                     newBoard[newX-1][newY+1]=0
                                                     newBoard[newX-2][newY+2]=1
-                                                    moves.append(copy.deepcopy(newBoard))
+                                                    newX, newY = newX-2,newY+2
+                                                    if isAttackAvailable(newX,newY,newBoard,1) != []:
+                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
+                                                        if newNewListOfDirection!=[]:
+                                                            for directionThird in newNewListOfDirection:
+                                                                if directionThird=="LEFT":
+                                                                    # third JUMP LEFT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX-1][newY-1]=0
+                                                                    newBoard[newX-2][newY-2]=1
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                                else:
+                                                                    # third JUMP RIGHT
+                                                                    newBoard[newX][newY]=0
+                                                                    newBoard[newX-1][newY+1]=0
+                                                                    newBoard[newX-2][newY+2]=1
+                                                                    moves.append(copy.deepcopy(newBoard))
+                                                    else:
+                                                        moves.append(copy.deepcopy(newBoard))
                                     else:
                                         moves.append(newBoard)
                     # no attack simple move
@@ -438,4 +602,16 @@ def alphabeta(board,depth,alpha,beta,max, player):
 
 
 if __name__ == "__main__":
-    startGame()
+    #startGame()
+    board = np.zeros((8,8))
+
+    board[5][1]=1
+    board[3][1]=1
+    board[1][1]=1
+    board[0][0]=2
+    print(board)
+    print(getPossibleMoves(2,board))
+    for move in getPossibleMoves(2,board):
+        plt.imshow(move)
+        plt.show()
+        print(move)
