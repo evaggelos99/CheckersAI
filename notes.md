@@ -88,6 +88,17 @@
         print()
 
 
+    board = np.zeros((8,8))
+
+    board[7][3]=1
+    board[6][2]=2
+    board[4][2]=2
+    board[2][2]=2
+
+    printBoard(board)
+    for move in getPossibleMoves(1,board):
+        printBoard(move)
+
 
 ## Changes 1.1
 
@@ -118,3 +129,10 @@
 
 * bugs
     * goes out of bounds. Need to check my helper functions or maybe remake them cause some are not efficient -> this is gonna be done later who am I kidding 😅
+
+## Changes 1.1.3
+
+* possible moves
+    * bugs fixed
+    * no more out of bounds 
+

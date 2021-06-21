@@ -5,6 +5,7 @@ import time
 import random
 import matplotlib.pyplot as plt
 
+
 def getInitialBoard():
     board = np.zeros(shape=(8,8))
 
@@ -41,22 +42,24 @@ def getInitialBoard():
     
     return board
 
+
+
 def evaluationFun(board,player):
     val,play=gameIsSolved(board)
     lengthTwo = np.count_nonzero(board == 2)
     lengthOne = np.count_nonzero(board == 1)
     if player==1:
         if val and play==2:
-            return -100 
-        elif val and play==1:
-            return +100
-        else:
-            return lengthOne-lengthTwo
-    if player==2:
-        if val and play==2:
-            return +100
+            return +100 
         elif val and play==1:
             return -100
+        else:
+            return lengthOne-lengthTwo
+    else:
+        if val and play==2:
+            return -100
+        elif val and play==1:
+            return +100
         else:
             return lengthTwo-lengthOne
 
@@ -81,34 +84,24 @@ def isAttackValid(i,j,board,player,dir):
                 return True
 
 
+
 '''
 kings are presented as 4 for 2
 and 3 for 1
 black is 1
 '''
-
 def gameIsSolved(board):
-    sum2=0
-    sum1=0
-    for x in board:
-        for y in x:
-            if y==1 or y==3:
-                sum1+=1
-            elif y==2 or y==4:
-                sum2+=1
-    
-    if sum1==0:
-        return True,1
-    elif sum2==0:
+    lengthTwo = np.count_nonzero(board == 2)
+    lengthOne = np.count_nonzero(board == 1)
+    if lengthOne==0:
         return True,2
+    elif lengthTwo==0:
+        return True,1
     else:
         return False,None
-    pass
-
 
 '''
-This function only checks for blanks
-still havent reached more into it
+it can only jumps 3 times which is the maximum. Now for kings i would have to make a new method and actually implement promotions for it
 '''
 def getPossibleMoves(player,board):
     copyBoard = copy.deepcopy(board)
@@ -131,7 +124,7 @@ def getPossibleMoves(player,board):
                                     newBoard[x][y]=0
                                     newBoard[x+1][y-1]=0
                                     newBoard[x+2][y-2]=2
-                                    newX,newY = x+2,y-2
+                                    newX, newY = x+2,y-2
                                     if isAttackAvailable(newX,newY,newBoard,2) != []:
                                         newListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
                                         if newListOfDirection!=[]:
@@ -141,7 +134,7 @@ def getPossibleMoves(player,board):
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX+1][newY-1]=0
                                                     newBoard[newX+2][newY-2]=2
-                                                    newX,newY = newX+2,newY-2
+                                                    newX, newY = newX+2,newY-2
                                                     if isAttackAvailable(newX,newY,newBoard,2) != []:
                                                         newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
                                                         if newNewListOfDirection!=[]:
@@ -171,9 +164,9 @@ def getPossibleMoves(player,board):
                                                     if isAttackAvailable(newX,newY,newBoard,2) != []:
                                                         newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
                                                         if newNewListOfDirection!=[]:
-                                                            for directionThird in newListOfDirection:
+                                                            for directionThird in newNewListOfDirection:
                                                                 if directionThird=="LEFT":
-                                                                    # THIRD JUMP RIGHT
+                                                                    # THIRD JUMP LEFT
                                                                     newBoard[newX][newY]=0
                                                                     newBoard[newX+1][newY-1]=0
                                                                     newBoard[newX+2][newY-2]=2
@@ -194,59 +187,64 @@ def getPossibleMoves(player,board):
                                     newBoard[x][y]=0
                                     newBoard[x+1][y+1]=0
                                     newBoard[x+2][y+2]=2
-                                    newX,newY = x+2,y+2
+                                    newX, newY = x+2, y+2
+                                    copyBoard = copy.deepcopy(newBoard)
                                     if isAttackAvailable(newX,newY,newBoard,2) != []:
-                                        newListOfDirection = whereIsTheAttack(x+2,y+2,newBoard,2)
+                                        newListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
                                         if newListOfDirection!=[]:
                                             for directionTwo in newListOfDirection:
-                                                if directionTwo=="LEFT":
+                                                if directionTwo == "LEFT":
+                                                    print("i go first")
                                                     # SECOND JUMP LEFT
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX+1][newY-1]=0
                                                     newBoard[newX+2][newY-2]=2
-                                                    newX, newY = newX+2,newY-2
-                                                    if isAttackAvailable(newX,newY,newBoard,2):
-                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
+                                                    newNewX, newNewY = newX+2,newY-2
+                                                    if isAttackAvailable(newNewX,newNewY,newBoard,2):
+                                                        newNewListOfDirection = whereIsTheAttack(newNewX,newNewY,newBoard,2)
                                                         if newNewListOfDirection !=[]:
                                                             for directionThree in newNewListOfDirection:
                                                                 if directionThree == "LEFT":
                                                                     # THIRD JUMP LEFT
-                                                                    newBoard[newX][newY]=0
-                                                                    newBoard[newX+1][newY-1]=0
-                                                                    newBoard[newX+2][newY-2]=2
+                                                                    newBoard[newNewX][newNewY]=0
+                                                                    newBoard[newNewX+1][newNewY-1]=0
+                                                                    newBoard[newNewX+2][newNewY-2]=2
                                                                     moves.append(copy.deepcopy(newBoard))
                                                                 else:
                                                                     # THIRD JUMP RIGHT
-                                                                    newBoard[newX][newY]=0
-                                                                    newBoard[newX+1][newY+1]=0
-                                                                    newBoard[newX+2][newY+2]=2
+                                                                    newBoard[newNewX][newNewY]=0
+                                                                    newBoard[newNewX+1][newNewY+1]=0
+                                                                    newBoard[newNewX+2][newNewY+2]=2
                                                                     moves.append(copy.deepcopy(newBoard))
                                                     else:
                                                         moves.append(copy.deepcopy(newBoard))
                                                 else:
                                                     # SECOND JUMP RIGHT
+                                                    newBoard = copy.deepcopy(copyBoard)
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX+1][newY+1]=0
                                                     newBoard[newX+2][newY+2]=2
-                                                    newX, newY = newX+2,newY-2
-                                                    if isAttackAvailable(newX,newY,newBoard,2):
-                                                        newNewListOfDirection = whereIsTheAttack(newX,newY,newBoard,2)
+                                                    newNewX, newNewY = newX+2, newY+2
+                                                    copyBoard = copy.deepcopy(newBoard)
+                                                    if isAttackAvailable(newNewX,newNewY,newBoard,2):
+                                                        newNewListOfDirection = whereIsTheAttack(newNewX,newNewY,newBoard,2)
                                                         if newNewListOfDirection!=[]:
                                                             for directionThree in newNewListOfDirection:
                                                                 if directionThree == "LEFT":
                                                                     # THIRD JUMP LEFT
-                                                                    newBoard[newX][newY]=0
-                                                                    newBoard[newX+1][newY-1]=0
-                                                                    newBoard[newX+2][newY-2]=2
+                                                                    newBoard[newNewX][newNewY]=0
+                                                                    newBoard[newNewX+1][newNewY-1]=0
+                                                                    newBoard[newNewX+2][newNewY-2]=2
                                                                     moves.append(copy.deepcopy(newBoard))
                                                                 else:
                                                                     # THIRD JUMP RIGHT
-                                                                    newBoard[newX][newY]=0
-                                                                    newBoard[newX+1][newY+1]=0
-                                                                    newBoard[newX+2][newY+2]=2
+                                                                    newBoard[newNewX][newNewY]=0
+                                                                    newBoard[newNewX+1][newNewY+1]=0
+                                                                    newBoard[newNewX+2][newNewY+2]=2
                                                                     moves.append(copy.deepcopy(newBoard))
                                                     else:
                                                         moves.append(copy.deepcopy(newBoard))
+                                                        newBoard = copy.deepcopy(copyBoard)
                                     else:
                                         moves.append(copy.deepcopy(newBoard))
                     # no attack simple move
@@ -339,10 +337,6 @@ def getPossibleMoves(player,board):
                                                                     else:
                                                                         moves.append(copy.deepcopy(newBoard))
                                                     else:
-                                                        newBoard[newX][newY]=0
-                                                        newBoard[newX-1][newY+1]=0
-                                                        newBoard[newX-2][newY+2]=1
-                                                        newX,newY=newX-1,newY+2
                                                         moves.append(copy.deepcopy(newBoard))
                                     else:
                                         moves.append(newBoard)
@@ -356,8 +350,8 @@ def getPossibleMoves(player,board):
                                     if isAttackAvailable(newX,newY,newBoard,1) != []:
                                         newListOfDirection = whereIsTheAttack(newX,newY,newBoard,1)
                                         if newListOfDirection!=[]:
-                                            for direction in newListOfDirection:
-                                                if direction=="LEFT":
+                                            for directionTwo in newListOfDirection:
+                                                if directionTwo=="LEFT":
                                                     # second jump LEFT
                                                     newBoard[newX][newY]=0
                                                     newBoard[newX-1][newY-1]=0
@@ -424,7 +418,6 @@ def getPossibleMoves(player,board):
     return moves
 
 
-
 def isAttackAvailable(i,j,board,player):
     listOfAttackAvailable = []
     if player==1:
@@ -457,11 +450,10 @@ def isAttackAvailable(i,j,board,player):
 This function only checks for the array bounds nothing else
 '''
 def isItInBounds(i,j):
-    if i>=0 and i<=7:
-        if j>=0 and j<=7:
-            return True
-    return False
-    pass
+    if i>=0 and i<=7 and j>=0 and j<=7:
+        return True
+    else:
+        return False
 
 
 def isThereAnAttackOnBoard(board, player):
@@ -479,7 +471,7 @@ def isThereAnAttackOnBoard(board, player):
                     if player == 2:
                         return True
     
-    return []
+    return False
 
 
 '''
@@ -528,57 +520,58 @@ def move(player,board):
     bestScore = -math.inf
     moves = getPossibleMoves(player, board)
     moveloc = moves[0]
-    for move in moves:
+    for position in moves:
         if player==1:
-            score = alphabeta(move, 1, -math.inf, math.inf, True, 1)
-        elif player==2:
-            score = alphabeta(move, 1, -math.inf, math.inf, True, 2)
+            score = alphabeta(position, 3, -math.inf, math.inf, True, 1,1)
+        elif player==2: 
+            score = alphabeta(position, 3, -math.inf, math.inf, True, 2,2)
         if score > bestScore:
             bestScore = score
-            moveLoc = move
+            moveLoc = position
     return moveLoc
 
 def startGame():
-
+    
     board = getInitialBoard()
     # create player objects
     player = 1
     while(True):
-        
-        '''plt.imshow(board)
+        print("initial player", player)
+        plt.imshow(board)
         plt.title("player=%i" %player)
-        plt.show()'''
-        print(board)
-        properMove = move(player,board)
-        board = properMove
+        plt.show()
+        board = move(player,board)
         boolis, playerWon = gameIsSolved(board)
         if boolis:
             print(playerWon, "Won!")
             break
         if player==1:
             player=2
-        else:
+            initialPlayer=2
+        elif player==2:
             player=1
-
+            initialPlayer=1
 
 
 '''
 initial call:
 minimax(currentPosition, 3, -∞, +∞, true)
 '''
-def alphabeta(board,depth,alpha,beta,max, player):
+def alphabeta(board,depth,alpha,beta,maxPlayer, player, initialPlayer):
+    
     smallBool,_ = gameIsSolved(board)
     if smallBool or depth==0:
-        return evaluationFun(board,player)
-    
-    if max:
+        return evaluationFun(board,initialPlayer)
+        
+    if player==1:
+        player=2
+    elif player==2:
+        player=1
+
+    if maxPlayer:
         bestValue = -math.inf
         for move in getPossibleMoves(player,board):
-            if player==1:
-                player=2
-            else:
-                player==1
-            value = alphabeta(move,depth-1,alpha,beta, False, player)
+            value = alphabeta(move,depth-1,alpha,beta, False, player,initialPlayer)
             bestValue = max(bestValue,value)
             alpha = max(alpha, value)
             if beta <= alpha:
@@ -588,30 +581,30 @@ def alphabeta(board,depth,alpha,beta,max, player):
     else:
         smallValue = math.inf
         for move in getPossibleMoves(player,board):
-            if player==1:
-                player=2
-            else:
-                player==1
-            value = alphabeta(move,depth-1,alpha,beta, True, player)
+            value = alphabeta(move,depth-1,alpha,beta, True, player,initialPlayer)
             smallValue = min(smallValue,value)
             beta = min(beta, value)
             if beta <= alpha:
                 break
         return smallValue
 
+def printBoard(board):
+    plt.imshow(board)
+    plt.show()
 
 
 if __name__ == "__main__":
     #startGame()
     board = np.zeros((8,8))
+    board[1][1]=2
+    board[2][2]=1
+    board[4][2]=1
+    board[4][4]=1
 
-    board[5][1]=1
-    board[3][1]=1
-    board[1][1]=1
-    board[0][0]=2
-    print(board)
-    print(getPossibleMoves(2,board))
+    board[6][2]=1
+    board[6][4]=1
+    board[6][6]=1
+    printBoard(board)
+    
     for move in getPossibleMoves(2,board):
-        plt.imshow(move)
-        plt.show()
-        print(move)
+        printBoard(move)
