@@ -18,6 +18,16 @@
 
  [1. 0. 1. 0. 1. 0. 1. 0.]  ]
 
+## With kings representations
+[[0 0 3 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0]
+ [0 0 4 0 0 0 0 0]]
+
 
  ## Code that might be needed for more debugging
     
