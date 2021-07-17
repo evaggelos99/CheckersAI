@@ -18,96 +18,40 @@
 
  [1. 0. 1. 0. 1. 0. 1. 0.]  ]
 
-## With kings representations
-[[0 0 3 0 0 0 0 0]
- [0 0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0 0]
- [0 0 0 0 0 0 0 0]
- [0 0 4 0 0 0 0 0]]
 
+Evaluation function notes:
 
- ## Code that might be needed for more debugging
-    
-    board = np.zeros((8,8))
-    board[5][3]=1
-    board[3][3]=1
-    board[1][3]=1
-    board[0][4]=2
-    printBoard(board)
-    for move in getPossibleMoves(2,board):
-        printBoard(move)
+1. Number of pawns; ✅
+2. Number of kings;✅
+3. Number of safe pawns (i.e. adjacent to the edge of the board); ✅
+4. Number of safe kings;✅
+5. Number of moveable pawns (i.e. able to perform a move other than capturing). ✅
+6. Number of moveable kings. Parameters 5 and 6 are calculated taking no notice of capturing priority; ✅
+7. Aggregated distance of the pawns to promotion line; TODO
+8. Number of unoccupied fields on promotion line. ✅
+Heuristics could also consider sums of or differences in respective parameters for both players rather than raw numbers for each player separately. Once heuristics using the straightforward parameters listed above had been generated and tested, it was decided that it would be desirable to add more sophisticated parameters characterizing layout of the pieces on the board. The following parameters were, therefore, introduced: 
+9. Number of defender pieces2 (i.e. the ones situated in two lowermost rows); ✅
+10. Number of attacking pawns (i.e. positioned in three topmost rows); ✅
+11. Number of centrally positioned pawns (i.e. situated on the eight central squares of the board); ✅
+12. Number of centrally positioned kings; ✅
+13. Number of pawns positioned on the main diagonal; ✅
+14. Number of kings positioned on the main diagonal; ✅
+15. Number of pawns situated on double diagonal; ✅
+16. Number of kings situated on double diagonal; ✅
+17. Number of loner pawns. Loner piece is defined as the one not adjacent to any other 
+piece; ✅
+18. Number of loner kings; TODO
+19. Number of holes, i.e. empty squares adjacent to at least three pieces of the same colour. TODO 
+Apart from the above parameters six patterns were defined. They are described below using common notation presented in Fig. 2. Since only one instance of each pattern can exist for any of the players at the same time, features 20−25 can take only boolean values. 
 
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. 20. Presence of a Triangle pattern(see Fig. 3(a)). 
+2. 21. Presence of an Oreo pattern (see Fig. 3(b)). 
+3. 22. Presence of a Bridge pattern (see Fig. 3(c)). 
+4. 23. Presence of a Dog pattern (see Fig. 3(d)). 
+5. 24. Presence of a pawn in corner (i.e. White (Black) pawn on square 29 (4), resp.); 
+6. 25. Presence of a king in corner (i.e. White (Black) king on square 4 (29), resp.); 
 
-    [[0. 1. 0. 0. 0. 2. 0. 2.]
-    [0. 0. 2. 0. 2. 0. 2. 0.]
-    [0. 2. 0. 2. 0. 2. 0. 1.]
-    [2. 0. 2. 0. 1. 0. 0. 0.]
-    [0. 1. 0. 0. 0. 0. 0. 0.]
-    [0. 0. 0. 0. 0. 0. 0. 0.]
-    [0. 1. 0. 1. 0. 1. 0. 1.]
-    [1. 0. 1. 0. 1. 0. 1. 0.]]
-
-
-    board = getInitialBoard()
-    board = np.zeros((8,8))
-    board[0,1]=1
-    board[0,5]=2
-    board[0,7]=2
-
-    board[1,2]=2
-    board[1,4]=2
-    board[1,6]=2
-
-    board[2,1]=2
-    board[2,3]=2
-    board[2,5]=2
-    board[2,7]=1
-
-    board[3,0]=2
-    board[3,2]=2
-    board[3,4]=1
-    
-    board[4,1]=1
-
-    board[6,1]=1
-    board[6,3]=1
-    board[6,5]=1
-    board[6,7]=1
-
-    board[7,0]=1
-    board[7,2]=1
-    board[7,4]=1
-    board[7,6]=1
-
-
-
-    board = np.zeros((8,8))
-
-    board[1][3]=2
-    board[2][2]=1
-    board[4][2]=1
-    print(board)
-    print()
-    moves = getPossibleMoves(1,board)
-    for move in moves:
-        print(move)
-        print()
-
-
-    board = np.zeros((8,8))
-
-    board[7][3]=1
-    board[6][2]=2
-    board[4][2]=2
-    board[2][2]=2
-
-    printBoard(board)
-    for move in getPossibleMoves(1,board):
-        printBoard(move)
+https://pages.mini.pw.edu.pl/~mandziukj/PRACE/es_init.pdf
 
 
 ## Changes 1.1
@@ -146,3 +90,23 @@
     * bugs fixed
     * no more out of bounds 
 
+
+## Changes 1.2.0
+
+* Possible moves
+    * bugs fixed
+
+* Minimax
+    * bugs fixed 
+    * still player 2 doesnt play optimally
+    * repeated moves 
+    * TODO stop repeated moves and add random choices
+
+* Evaluation
+    * added a good evaluation function but it's very unoptimised
+
+## Changes 1.2.1
+
+* Overall
+    * added 3 fold rule to check for repeating moves
+    * Both players seem to play optimally
